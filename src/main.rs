@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: Apache-2.0
 // SPDX-License-Identifier: MIT
 
+mod args;
 mod config;
 
 use config::Config;
@@ -14,6 +15,7 @@ use winit::event_loop::{ControlFlow, EventLoopBuilder};
 
 fn main() -> Result<(), impl std::error::Error> {
     configure_logger();
+    let args = args::Args::parse();
     debug!("Starting Heimdall");
 
     let event_loop = EventLoopBuilder::new().build()?;

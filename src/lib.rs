@@ -1,3 +1,5 @@
+mod args;
+
 use std::sync::Once;
 use tracing_subscriber::filter::{EnvFilter, LevelFilter};
 use tracing_subscriber::fmt::format::FmtSpan;
