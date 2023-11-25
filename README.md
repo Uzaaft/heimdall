@@ -9,13 +9,11 @@
 ## Installation
 To get started, simply clone the whole repository, and build it with Rust:
 
-    $ git clone https://github.com/uzaaft/idun.git
-    $ cd heimdall
-    $ cargo run --release
+    $ cargo install heimdall-cli
 
 
 ## Getting started
-To get started with Idun, follow these steps:
+To get started with Heimdall, follow these steps:
 
 1. Create a config file with the path `$XDG_CONFIG_HOME/heimdall/config.toml`
     The config file has the following format:
@@ -29,4 +27,8 @@ To get started with Idun, follow these steps:
     modifiers = ["Ctrl"]
     command = "osascript -e 'display notification  with title \"Hello 👋!\" subtitle \"Hello from Heimdall 😊\" sound name \"Crystal\"'"
 ```
-2. Start heimdall with the `cargo run` command
+
+2. Start heimdall with the `heim` command. If you want to start the service
+    $ heim --start-service
+
+
