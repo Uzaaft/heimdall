@@ -1,5 +1,5 @@
 [package]
-name = "heimdall"
+name = "heimdall-cli"
 version = "0.1.0"
 edition = "2021"
 description = "A simple hotkey deamon. Primarly tested on MacOS"

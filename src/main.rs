@@ -7,7 +7,7 @@ mod config;
 mod service;
 
 use config::Config;
-use heimdall::{configure_logger, spawn_command};
+use heimdall_cli::{configure_logger, spawn_command};
 use std::{collections::HashMap, process::Command};
 use tracing::{debug, info};
 
