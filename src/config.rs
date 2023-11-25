@@ -3,8 +3,45 @@ use anyhow::Result;
 use serde::Deserialize;
 
 #[derive(Deserialize, Debug)]
+pub(crate) enum Arrow {
+    Up,
+    Down,
+    Left,
+    Right,
+}
+
+impl ToString for Arrow {
+    fn to_string(&self) -> String {
+        match self {
+            Self::Up => "Up".to_string(),
+            Self::Down => "Down".to_string(),
+            Self::Left => "Left".to_string(),
+            Self::Right => "Right".to_string(),
+        }
+    }
+}
+
+impl From<Arrow> for String {
+    fn from(arrow: Arrow) -> Self {
+        arrow.to_string()
+    }
+}
+impl From<String> for Arrow {
+    fn from(s: String) -> Self {
+        match s.as_str() {
+            "Up" => Self::Up,
+            "Down" => Self::Down,
+            "Left" => Self::Left,
+            "Right" => Self::Right,
+            _ => panic!("Invalid arrow"),
+        }
+    }
+}
+
+#[derive(Deserialize, Debug)]
 pub struct Binding {
-    pub key: String,
+    pub key: Option<String>,
+    pub arrow: Option<Arrow>,
     // TODO: Make this optional,
     pub modifiers: Vec<String>,
     pub command: String,
@@ -14,10 +51,24 @@ pub struct Binding {
 impl ToString for Binding {
     fn to_string(&self) -> String {
         let modifiers = self.modifiers.join("+");
-        if modifiers.is_empty() {
-            format!("Key{}", self.key.to_uppercase())
-        } else {
-            format!("{}+Key{}", modifiers, self.key.to_uppercase())
+        match &self.key {
+            Some(key) => {
+                if modifiers.is_empty() {
+                    format!("Key{}", key.to_uppercase())
+                } else {
+                    format!("{}+Key{}", modifiers, key.to_uppercase())
+                }
+            }
+            None => match &self.arrow {
+                Some(arrow) => {
+                    if modifiers.is_empty() {
+                        format!("Arrow{}", arrow.to_string())
+                    } else {
+                        format!("{}+Arrow{}", modifiers, arrow.to_string())
+                    }
+                }
+                None => panic!("Invalid binding. Must have either key or arrow"),
+            },
         }
     }
 }
