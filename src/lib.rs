@@ -1,19 +1,15 @@
 mod args;
 
-use std::sync::Once;
+
+use std::{process::Command, sync::Once};
 use tracing_subscriber::filter::{EnvFilter, LevelFilter};
 use tracing_subscriber::fmt::format::FmtSpan;
 
-// Macro that takes in a string and spawns a command with that string
-#[macro_export]
-macro_rules! spawn_command {
-    ($command:expr) => {
-        Command::new("sh")
-            .arg("-c")
-            .arg($command)
-            .spawn()
-            .expect("Failed to execute command");
-    };
+// spawn a command with SHELL
+pub fn spawn_command(command: &str) {
+    let mut cmd = Command::new("sh");
+    cmd.arg("-c").arg(command);
+    cmd.spawn().expect("failed to execute process");
 }
 
 /// Initialize logger

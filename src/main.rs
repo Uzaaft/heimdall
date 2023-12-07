@@ -8,7 +8,7 @@ mod service;
 
 use config::Config;
 use heimdall_cli::{configure_logger, spawn_command};
-use std::{collections::HashMap, process::Command};
+use std::{collections::HashMap};
 use tracing::{debug, info, trace};
 
 use clap::Parser;
@@ -59,7 +59,7 @@ fn main() -> Result<()> {
                 match event.state {
                     global_hotkey::HotKeyState::Pressed => {
                         info!("key: {:?} pressed", key_command_map.get(&event.id));
-                        spawn_command!(key_command_map.get(&event.id).unwrap());
+                        spawn_command(key_command_map.get(&event.id).unwrap());
                     }
                     global_hotkey::HotKeyState::Released => {}
                 }
