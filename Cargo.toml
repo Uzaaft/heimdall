@@ -3,6 +3,9 @@ name = "heimdall-cli"
 version = "0.1.4"
 edition = "2021"
 description = "A simple hotkey deamon. Primarly tested on MacOS"
+homepage = "https://github.com/uzaaft/heimdall"
+documentation = "https://github.com/uzaaft/heimdall"
+repository = "https://github.com/uzaaft/heimdall"
 license = "MIT"
 
 [[bin]]
