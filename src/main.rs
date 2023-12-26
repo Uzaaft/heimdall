@@ -7,8 +7,9 @@ mod config;
 mod service;
 
 use config::Config;
+use fs2::FileExt;
 use heimdall_cli::{configure_logger, spawn_command};
-use std::{collections::HashMap};
+use std::{collections::HashMap, fs::File};
 use tracing::{debug, info, trace};
 
 use clap::Parser;
@@ -51,8 +52,10 @@ fn main() -> Result<()> {
         .collect();
 
     let global_hotkey_channel = GlobalHotKeyEvent::receiver();
+    let file = File::open("/tmp/heim.lock")?;
+    file.lock_exclusive()?;
 
-    event_loop
+    let _ = event_loop
         .run(move |_event, _| {
             if let Ok(event) = global_hotkey_channel.try_recv() {
                 trace!("Received hotkey event: {:?}", event);
@@ -65,5 +68,6 @@ fn main() -> Result<()> {
                 }
             }
         })
-        .map_err(|e| anyhow!(e))
+        .map_err(|e| anyhow!(e));
+    file.unlock().map_err(|e| anyhow!(e))
 }

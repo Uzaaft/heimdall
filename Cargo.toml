@@ -21,6 +21,7 @@ tracing-subscriber = { version = "0.3", features = ["env-filter"] }
 winit = { version = "0.29", default-features = false }
 auto-launch = "0.5"
 once_cell = "1.19.0"
+fs2 = "0.4"
 
 [dependencies.clap]
 version = "4"
