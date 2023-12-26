@@ -1,6 +1,6 @@
 [package]
 name = "heimdall-cli"
-version = "0.1.5"
+version = "0.1.6"
 edition = "2021"
 description = "A simple hotkey deamon. Primarly tested on MacOS"
 homepage = "https://github.com/uzaaft/heimdall"
