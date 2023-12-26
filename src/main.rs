@@ -52,7 +52,7 @@ fn main() -> Result<()> {
         .collect();
 
     let global_hotkey_channel = GlobalHotKeyEvent::receiver();
-    let file = File::open("/tmp/heim.lock")?;
+    let file = File::create("/tmp/heim.lock")?;
     file.lock_exclusive()?;
 
     let _ = event_loop
