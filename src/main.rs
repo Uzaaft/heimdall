@@ -5,12 +5,10 @@
 mod config;
 
 use config::Config;
-use fs2::FileExt;
+use fs4::FileExt;
 use heimdall_cli::{configure_logger, spawn_command};
 use std::{collections::HashMap, fs::File};
 use tracing::{debug, info, trace};
-
-use clap::Parser;
 
 use anyhow::{anyhow, Result};
 use global_hotkey::{hotkey::HotKey, GlobalHotKeyEvent, GlobalHotKeyManager};
@@ -18,16 +16,13 @@ use winit::event_loop::{ControlFlow, EventLoopBuilder};
 
 fn main() -> Result<()> {
     configure_logger();
-    let args = args::Args::parse();
-    if args.start_service {
-        return service::start_service().map_err(|e| anyhow!(e));
-    } else if args.stop_service {
-        return service::stop_service().map_err(|e| anyhow!(e));
-    } else if args.restart_service {
-        return service::restart_service().map_err(|e| anyhow!(e));
-    }
 
-    debug!("Starting Heimdall");
+    info!("Starting Heimdall");
+    info!("Aquiring lock file");
+    let file = File::create("/tmp/heim.lock")?;
+    file.try_lock_exclusive()
+        .map_err(|_| anyhow!("Couldn't aquire lock-file. Aborting.."))?;
+    info!("Lock file aquired");
 
     let event_loop = EventLoopBuilder::new().build()?;
     event_loop.set_control_flow(ControlFlow::Wait);
@@ -50,8 +45,6 @@ fn main() -> Result<()> {
         .collect();
 
     let global_hotkey_channel = GlobalHotKeyEvent::receiver();
-    let file = File::create("/tmp/heim.lock")?;
-    file.lock_exclusive()?;
 
     let _ = event_loop
         .run(move |_event, _| {
@@ -67,5 +60,7 @@ fn main() -> Result<()> {
             }
         })
         .map_err(|e| anyhow!(e));
-    file.unlock().map_err(|e| anyhow!(e))
+    file.unlock().map_err(|e| anyhow!(e));
+    // Remove file
+    std::fs::remove_file("/tmp/heim.lock").map_err(|e| anyhow!(e))
 }
