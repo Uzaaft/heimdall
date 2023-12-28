@@ -2,9 +2,7 @@
 // SPDX-License-Identifier: Apache-2.0
 // SPDX-License-Identifier: MIT
 
-mod args;
 mod config;
-mod service;
 
 use config::Config;
 use fs2::FileExt;
