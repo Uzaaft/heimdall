@@ -53,7 +53,9 @@ impl ToString for Binding {
         let modifiers = self.modifiers.join("+");
         match &self.key {
             Some(key) => {
-                if modifiers.is_empty() {
+                if &modifiers == "=" {
+                    "Equal".to_string()
+                } else if modifiers.is_empty() {
                     format!("Key{}", key.to_uppercase())
                 } else {
                     format!("{}+Key{}", modifiers, key.to_uppercase())
