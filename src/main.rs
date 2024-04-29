@@ -12,7 +12,7 @@ use tracing::{error, info, trace};
 
 use anyhow::{anyhow, Result};
 use global_hotkey::{hotkey::HotKey, GlobalHotKeyEvent, GlobalHotKeyManager};
-use winit::event_loop::{ControlFlow, EventLoopBuilder};
+use winit::event_loop::{ControlFlow, EventLoop, EventLoopBuilder};
 
 fn main() -> Result<()> {
     configure_logger();
@@ -26,13 +26,12 @@ fn main() -> Result<()> {
     }
     info!("Lock file aquired");
 
-    let event_loop = EventLoopBuilder::new().build()?;
+    let event_loop = EventLoop::new()?;
     event_loop.set_control_flow(ControlFlow::Wait);
 
-    let hotkeys_manager = GlobalHotKeyManager::new().unwrap();
+    let hotkeys_manager = GlobalHotKeyManager::new()?;
 
-    let key_command_map: HashMap<u32, String> = Config::read_config()
-        .unwrap()
+    let key_command_map: HashMap<u32, String> = Config::read_config()?
         .bindings
         .iter()
         .map(|hotkey| {
