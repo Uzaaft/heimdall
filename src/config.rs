@@ -53,12 +53,14 @@ impl ToString for Binding {
         let modifiers = self.modifiers.join("+");
         match &self.key {
             Some(key) => {
-                if &modifiers == "=" {
+                if key.parse::<u32>().is_ok() {
+                    format!("Digit{key}")
+                } else if key.as_str() == "=" {
                     "Equal".to_string()
                 } else if modifiers.is_empty() {
                     format!("Key{}", key.to_uppercase())
                 } else {
-                    format!("{}+Key{}", modifiers, key.to_uppercase())
+                    format!("{modifiers}+Key{}", key.to_uppercase())
                 }
             }
             None => match &self.arrow {
