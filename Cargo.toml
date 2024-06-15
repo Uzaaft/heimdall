@@ -18,8 +18,11 @@ path = "src/main.rs"
 anyhow = { version = "1" }
 global-hotkey = "0.5"
 serde = { version = "1" }
-toml = "0.8"
+toml = { version = "0.8", default-features = false, features = ["parse"] }
 tracing = { version = "0.1", default-features = false }
-tracing-subscriber = { version = "0.3", features = ["env-filter"] }
+tracing-subscriber = { version = "0.3", default-features = false, features = [
+  "fmt",
+  "env-filter",
+] }
 winit = { version = "0.30", default-features = false }
 fs4 = { version = "0.8", features = ["sync"], default-features = false }
