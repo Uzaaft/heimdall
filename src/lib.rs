@@ -5,7 +5,7 @@ use tracing_subscriber::fmt::format::FmtSpan;
 // spawn a command with SHELL
 pub fn spawn_command(command: &str) {
     let mut cmd = Command::new("sh");
-    cmd.arg("-c").arg(command);
+    cmd.args(["-c", command]);
     cmd.spawn().expect("failed to execute process");
 }
 
