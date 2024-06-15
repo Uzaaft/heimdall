@@ -12,7 +12,7 @@ use tracing::{error, info, trace};
 
 use anyhow::{anyhow, Result};
 use global_hotkey::{hotkey::HotKey, GlobalHotKeyEvent, GlobalHotKeyManager};
-use winit::event_loop::{ControlFlow, EventLoop, EventLoopBuilder};
+use winit::event_loop::{ControlFlow, EventLoop};
 
 fn main() -> Result<()> {
     configure_logger();
