@@ -1,3 +1,5 @@
+use core::fmt;
+
 use anyhow::Result;
 
 use global_hotkey::hotkey::Code;
@@ -11,13 +13,13 @@ pub(crate) enum Arrow {
     Right,
 }
 
-impl ToString for Arrow {
-    fn to_string(&self) -> String {
+impl fmt::Display for Arrow {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         match self {
-            Self::Up => "Up".to_string(),
-            Self::Down => "Down".to_string(),
-            Self::Left => "Left".to_string(),
-            Self::Right => "Right".to_string(),
+            Self::Up => write!(f, "Up"),
+            Self::Down => write!(f, "Down"),
+            Self::Left => write!(f, "Left"),
+            Self::Right => write!(f, "Right"),
         }
     }
 }
@@ -49,29 +51,29 @@ pub struct Binding {
 }
 
 // To string
-impl ToString for Binding {
-    fn to_string(&self) -> String {
+impl fmt::Display for Binding {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         let modifiers = self.modifiers.join("+").to_lowercase();
         match &self.key {
             Some(key) => {
                 if key.parse::<u32>().is_ok() {
-                    format!("Digit{key}")
+                    write!(f, "Digit{key}")
                 } else if key.as_str() == "Enter" {
-                    format!("{modifiers}+{}", Code::Enter)
+                    write!(f, "{modifiers}+{}", Code::Enter)
                 } else if key.as_str() == "=" {
-                    "Equal".to_string()
+                    write!(f, "Equal")
                 } else if modifiers.is_empty() {
-                    format!("Key{}", key.to_uppercase())
+                    write!(f, "Key{}", key.to_uppercase())
                 } else {
-                    format!("{modifiers}+Key{}", key.to_uppercase())
+                    write!(f, "{modifiers}+Key{}", key.to_uppercase())
                 }
             }
             None => match &self.arrow {
                 Some(arrow) => {
                     if modifiers.is_empty() {
-                        format!("Arrow{}", arrow.to_string())
+                        write!(f, "Arrow{}", arrow)
                     } else {
-                        format!("{}+Arrow{}", modifiers, arrow.to_string())
+                        write!(f, "{}+Arrow{}", modifiers, arrow)
                     }
                 }
                 None => panic!("Invalid binding. Must have either key or arrow"),
