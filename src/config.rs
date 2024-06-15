@@ -1,5 +1,6 @@
 use anyhow::Result;
 
+use global_hotkey::hotkey::Code;
 use serde::Deserialize;
 
 #[derive(Deserialize, Debug)]
@@ -50,11 +51,13 @@ pub struct Binding {
 // To string
 impl ToString for Binding {
     fn to_string(&self) -> String {
-        let modifiers = self.modifiers.join("+");
+        let modifiers = self.modifiers.join("+").to_lowercase();
         match &self.key {
             Some(key) => {
                 if key.parse::<u32>().is_ok() {
                     format!("Digit{key}")
+                } else if key.as_str() == "Enter" {
+                    format!("{modifiers}+{}", Code::Enter)
                 } else if key.as_str() == "=" {
                     "Equal".to_string()
                 } else if modifiers.is_empty() {
