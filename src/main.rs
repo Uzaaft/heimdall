@@ -10,7 +10,7 @@ use heimdall_cli::{configure_logger, spawn_command};
 use std::{collections::HashMap, fs::File};
 use tracing::{error, info, trace};
 
-use anyhow::{anyhow, Result};
+use anyhow::{anyhow, bail, Result};
 use global_hotkey::{hotkey::HotKey, GlobalHotKeyEvent, GlobalHotKeyManager};
 use winit::event_loop::{ControlFlow, EventLoop};
 
@@ -22,7 +22,7 @@ fn main() -> Result<()> {
     let file = File::create("/tmp/heim.lock")?;
     if file.try_lock_exclusive().is_err() {
         error!("Couldn't aquire lock-file. Aborting..");
-        return Err(anyhow!("Couldn't aquire lock-file. Aborting.."));
+        bail!("Couldn't aquire lock-file. Aborting..");
     }
     info!("Lock file aquired");
 
@@ -47,21 +47,17 @@ fn main() -> Result<()> {
 
     let global_hotkey_channel = GlobalHotKeyEvent::receiver();
 
-    event_loop
-        .run(move |_event, _| {
-            if let Ok(event) = global_hotkey_channel.try_recv() {
-                trace!("Received hotkey event: {:?}", event);
-                match event.state {
-                    global_hotkey::HotKeyState::Pressed => {
-                        info!("key: {:?} pressed", key_command_map.get(&event.id));
-                        spawn_command(key_command_map.get(&event.id).unwrap());
-                    }
-                    global_hotkey::HotKeyState::Released => {}
-                }
+    event_loop.run(move |_event, _| {
+        if let Ok(event) = global_hotkey_channel.try_recv() {
+            trace!("Received hotkey event: {:?}", event);
+            if global_hotkey::HotKeyState::Released == event.state {
+                info!("key: {:?} released", key_command_map.get(&event.id));
+                spawn_command(key_command_map.get(&event.id).unwrap());
             }
-        })
-        .map_err(|e| anyhow!(e))?;
-    file.unlock().map_err(|e| anyhow!(e))?;
+        }
+    })?;
+
+    file.unlock()?;
     // Remove file
-    std::fs::remove_file("/tmp/heim.lock").map_err(|e| anyhow!(e))
+    Ok(std::fs::remove_file("/tmp/heim.lock")?)
 }
