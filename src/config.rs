@@ -91,12 +91,16 @@ impl Config {
     pub fn from_str(s: &str) -> Result<Self, toml::de::Error> {
         toml::from_str(s)
     }
+
+    pub fn config_path() -> String {
+        std::env::var("XDG_CONFIG_HOME")
+            .unwrap_or_else(|_| format!("{}/.config", std::env::var("HOME").unwrap()))
+            + "/heimdall/config.toml"
+    }
     // Read config file from XDG_CONFIG_HOME. Fallback to ~/.config/heimdall/config.toml
     // TODO: Add better error handling
     pub fn read_config() -> Result<Self> {
-        let config_path = std::env::var("XDG_CONFIG_HOME")
-            .unwrap_or_else(|_| format!("{}/.config", std::env::var("HOME").unwrap()))
-            + "/heimdall/config.toml";
+        let config_path = Self::config_path();
         let config_file = std::fs::read_to_string(config_path)?;
         Ok(Self::from_str(&config_file)?)
     }
