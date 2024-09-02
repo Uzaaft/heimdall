@@ -10,7 +10,7 @@ use heimdall_cli::{configure_logger, spawn_command};
 use std::{collections::HashMap, fs::File};
 use tracing::{error, info, trace};
 
-use anyhow::{anyhow, bail, Result};
+use anyhow::{bail, Result};
 use global_hotkey::{hotkey::HotKey, GlobalHotKeyEvent, GlobalHotKeyManager};
 use winit::event_loop::{ControlFlow, EventLoop};
 
