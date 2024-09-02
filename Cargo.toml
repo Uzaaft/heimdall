@@ -16,7 +16,7 @@ path = "src/main.rs"
 
 [dependencies]
 anyhow = { version = "1" }
-global-hotkey = "0.5"
+global-hotkey = "0.6"
 serde = { version = "1" }
 toml = { version = "0.8", default-features = false, features = ["parse"] }
 tracing = { version = "0.1", default-features = false }
@@ -25,4 +25,4 @@ tracing-subscriber = { version = "0.3", default-features = false, features = [
   "env-filter",
 ] }
 winit = { version = "0.30", default-features = false }
-fs4 = { version = "0.8", features = ["sync"], default-features = false }
+fs4 = { version = "0.9", features = ["sync"], default-features = false }

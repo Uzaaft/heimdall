@@ -5,7 +5,7 @@
 mod config;
 
 use config::Config;
-use fs4::FileExt;
+use fs4::fs_std::FileExt;
 use heimdall_cli::{configure_logger, spawn_command};
 use std::{collections::HashMap, fs::File};
 use tracing::{error, info, trace};
