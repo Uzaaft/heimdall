@@ -1,12 +1,19 @@
 use std::{process::Command, sync::Once};
+use tracing::{error, info};
 use tracing_subscriber::filter::{EnvFilter, LevelFilter};
 use tracing_subscriber::fmt::format::FmtSpan;
 
 // spawn a command with SHELL
-pub fn spawn_command(command: &str) {
+pub fn spawn_command(command: &str) -> anyhow::Result<()> {
     let mut cmd = Command::new("sh");
     cmd.args(["-c", command]);
-    cmd.spawn().expect("failed to execute process");
+    if let Ok(mut child) = cmd.spawn() {
+        let code = child.wait()?;
+        info!("{command} ran with code: {code}");
+    } else {
+        error!("{command} didnt run successfully");
+    }
+    Ok(())
 }
 
 /// Initialize logger
