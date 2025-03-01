@@ -1,7 +1,6 @@
 # Heimdall
 
-## Status: Very alpha, but being daily driven by the author.
-## Note: This project is a WIP, and the following docs may be uncomplete. Feel free to open PR's if something is missing. 
+### Status: Very alpha, and WIP. The following docs may be uncomplete. Feel free to open PR's if something is missing. 
 
 ## Features:
 
