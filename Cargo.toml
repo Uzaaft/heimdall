@@ -1,7 +1,7 @@
 [package]
 name = "heimdall-cli"
 version = "0.2.0"
-edition = "2021"
+edition = "2024"
 description = "A simple hotkey daemon. Primarily tested on MacOS"
 homepage = "https://github.com/uzaaft/heimdall"
 documentation = "https://github.com/uzaaft/heimdall"
@@ -31,4 +31,4 @@ tracing-subscriber = { version = "0.3", default-features = false, features = [
   "env-filter",
 ] }
 # File locking
-fs4 = { version = "0.12", features = ["sync"], default-features = false }
+fs4 = { version = "0.13", features = ["sync"], default-features = false }
