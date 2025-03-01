@@ -1,17 +1,13 @@
-// Copyright 2022-2022 Tauri Programme within The Commons Conservancy
-// SPDX-License-Identifier: Apache-2.0
-// SPDX-License-Identifier: MIT
-
 mod config;
 
 use config::Config;
 use fs4::fs_std::FileExt;
 use heimdall_cli::{configure_logger, spawn_command};
 use std::{collections::HashMap, fs::File};
-use tracing::{error, info, trace};
+use tracing::{info, trace};
 
-use anyhow::{bail, Result};
-use global_hotkey::{hotkey::HotKey, GlobalHotKeyEvent, GlobalHotKeyManager};
+use anyhow::{Result, bail};
+use global_hotkey::{GlobalHotKeyEvent, GlobalHotKeyManager, hotkey::HotKey};
 use winit::{
     application::ApplicationHandler,
     event::WindowEvent,
@@ -62,7 +58,6 @@ fn main() -> Result<()> {
     info!("Starting Heimdall");
     let file = File::create("/tmp/heim.lock")?;
     if file.try_lock_exclusive().is_err() {
-        error!("Couldn't aquire lock-file. Aborting..");
         bail!("Couldn't aquire lock-file. Aborting..");
     }
     info!("Lock file aquired");
