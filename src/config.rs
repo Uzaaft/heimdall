@@ -2,7 +2,7 @@ use core::fmt;
 
 use anyhow::Result;
 
-use global_hotkey::hotkey::Code;
+use global_hotkey::hotkey::{Code, Modifiers};
 use serde::Deserialize;
 
 #[derive(Deserialize, Debug)]
@@ -46,34 +46,33 @@ pub struct Binding {
     pub key: Option<String>,
     pub arrow: Option<Arrow>,
     // TODO: Make this optional,
-    pub modifiers: Vec<String>,
+    pub modifiers: Vec<Modifiers>,
     pub command: String,
 }
 
 // To string
 impl fmt::Display for Binding {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        let modifiers = self.modifiers.join("+").to_lowercase();
         match &self.key {
             Some(key) => {
                 if key.parse::<u32>().is_ok() {
                     write!(f, "Digit{key}")
                 } else if key.as_str() == "Enter" {
-                    write!(f, "{modifiers}+{}", Code::Enter)
+                    write!(f, "{:?}+{}", self.modifiers, Code::Enter)
                 } else if key.as_str() == "=" {
                     write!(f, "Equal")
-                } else if modifiers.is_empty() {
+                } else if self.modifiers.is_empty() {
                     write!(f, "Key{}", key.to_uppercase())
                 } else {
-                    write!(f, "{modifiers}+Key{}", key.to_uppercase())
+                    write!(f, "{:?}+Key{}", self.modifiers, key.to_uppercase())
                 }
             }
             None => match &self.arrow {
                 Some(arrow) => {
-                    if modifiers.is_empty() {
+                    if self.modifiers.is_empty() {
                         write!(f, "Arrow{}", arrow)
                     } else {
-                        write!(f, "{}+Arrow{}", modifiers, arrow)
+                        write!(f, "{:?}+Arrow{arrow:?}", self.modifiers)
                     }
                 }
                 None => panic!("Invalid binding. Must have either key or arrow"),
