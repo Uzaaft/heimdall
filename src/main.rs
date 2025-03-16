@@ -39,9 +39,9 @@ impl ApplicationHandler<AppEvent> for App {
     }
 
     fn user_event(&mut self, _event_loop: &ActiveEventLoop, event: AppEvent) {
+        tracing::trace!("Event: {event:?}");
         match event {
             AppEvent::HotKey(event) => {
-                println!("{event:?}");
                 trace!("Received hotkey event: {:?}", event);
                 if global_hotkey::HotKeyState::Released == event.state {
                     info!("key: {:?} released", &self.key_command_map.get(&event.id));

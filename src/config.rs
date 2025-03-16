@@ -55,11 +55,13 @@ impl fmt::Display for Binding {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         let modifiers = self.modifiers.join("+").to_lowercase();
         match &self.key {
+            // TODO: Logic flaw. This code handles modifiers sub optimally.
+            // Ideally we should have some kind of string that we try and add st
             Some(key) => {
-                if key.parse::<u32>().is_ok() {
-                    write!(f, "Digit{key}")
-                } else if key.as_str() == "Enter" {
-                    write!(f, "{modifiers}+{}", Code::Enter)
+                if let Ok(key) = key.parse::<Code>() {
+                    write!(f, "{modifiers}+{key}")
+                } else if key.parse::<u32>().is_ok() {
+                    write!(f, "{modifiers}+Digit{key}")
                 } else if key.as_str() == "=" {
                     write!(f, "Equal")
                 } else if modifiers.is_empty() {
