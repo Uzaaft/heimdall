@@ -1,9 +1,14 @@
 use core::fmt;
+use std::{
+    fs,
+    path::{Path, PathBuf},
+    str::FromStr,
+};
 
 use global_hotkey::hotkey::Code;
 use serde::Deserialize;
 
-use crate::error::AppResult;
+use crate::error::{AppError, AppResult};
 
 #[derive(Deserialize, Debug)]
 pub(crate) enum Arrow {
@@ -92,15 +97,19 @@ impl Config {
         toml::from_str(s)
     }
 
-    pub fn config_path() -> String {
-        std::env::var("XDG_CONFIG_HOME")
+    pub fn config_path() -> AppResult<PathBuf> {
+        let s = std::env::var("XDG_CONFIG_HOME")
             .unwrap_or_else(|_| format!("{}/.config", std::env::var("HOME").unwrap()))
-            + "/heimdall/config.toml"
+            + "/heimdall/config.toml";
+        PathBuf::from_str(&s).map_err(|e| AppError::Config(e.to_string()))
     }
 
     /// Read config file from XDG_CONFIG_HOME. Fallback to ~/.config/heimdall/config.toml
     pub fn read_config() -> AppResult<Self> {
-        let config_path = Self::config_path();
+        let config_path = Self::config_path()?;
+        if !Path::is_file(&config_path) {
+            return Err(AppError::Config("Config file not found".to_string()));
+        }
         let config_file = std::fs::read_to_string(config_path)?;
         Ok(Self::from_str(&config_file)?)
     }
