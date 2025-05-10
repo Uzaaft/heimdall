@@ -17,7 +17,7 @@ path = "src/main.rs"
 [dependencies]
 # Windowing
 winit = { version = "0.30", default-features = false }
-global-hotkey = { version = "0.6", path = "./crates/global-hotkey" }
+global-hotkey = { version = "0.7" }
 
 # Misc
 anyhow = { version = "1" }
@@ -31,4 +31,5 @@ tracing-subscriber = { version = "0.3", default-features = false, features = [
   "env-filter",
 ] }
 # File locking
+# TODO: Remove this once https://github.com/rust-lang/rust/issues/130994 is implemented
 fs4 = { version = "0.13", features = ["sync"], default-features = false }
