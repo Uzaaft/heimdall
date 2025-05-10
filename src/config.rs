@@ -1,9 +1,9 @@
 use core::fmt;
 
-use anyhow::Result;
-
 use global_hotkey::hotkey::Code;
 use serde::Deserialize;
+
+use crate::error::AppResult;
 
 #[derive(Deserialize, Debug)]
 pub(crate) enum Arrow {
@@ -88,7 +88,7 @@ pub struct Config {
 }
 
 impl Config {
-    pub fn from_str(s: &str) -> Result<Self, toml::de::Error> {
+    pub fn from_str(s: &str) -> AppResult<Self, toml::de::Error> {
         toml::from_str(s)
     }
 
@@ -97,9 +97,9 @@ impl Config {
             .unwrap_or_else(|_| format!("{}/.config", std::env::var("HOME").unwrap()))
             + "/heimdall/config.toml"
     }
-    // Read config file from XDG_CONFIG_HOME. Fallback to ~/.config/heimdall/config.toml
-    // TODO: Add better error handling
-    pub fn read_config() -> Result<Self> {
+
+    /// Read config file from XDG_CONFIG_HOME. Fallback to ~/.config/heimdall/config.toml
+    pub fn read_config() -> AppResult<Self> {
         let config_path = Self::config_path();
         let config_file = std::fs::read_to_string(config_path)?;
         Ok(Self::from_str(&config_file)?)

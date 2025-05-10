@@ -1,10 +1,13 @@
+mod error;
+
+use error::AppResult;
 use std::{process::Command, sync::Once};
 use tracing::{error, info};
 use tracing_subscriber::filter::{EnvFilter, LevelFilter};
 use tracing_subscriber::fmt::format::FmtSpan;
 
 // spawn a command with SHELL
-pub fn spawn_command(command: &str) -> anyhow::Result<()> {
+pub fn spawn_command(command: &str) -> AppResult<()> {
     let mut cmd = Command::new("sh");
     cmd.args(["-c", command]);
     if let Ok(mut child) = cmd.spawn() {

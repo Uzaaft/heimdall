@@ -1,12 +1,13 @@
 mod config;
+mod error;
 
 use config::Config;
+use error::AppResult;
 use fs4::fs_std::FileExt;
 use heimdall_cli::{configure_logger, spawn_command};
 use std::{collections::HashMap, fs::File};
 use tracing::{info, trace};
 
-use anyhow::{Result, bail};
 use global_hotkey::{GlobalHotKeyEvent, GlobalHotKeyManager, hotkey::HotKey};
 use winit::{
     application::ApplicationHandler,
@@ -52,15 +53,13 @@ impl ApplicationHandler<AppEvent> for App {
     }
 }
 
-fn main() -> Result<()> {
+fn main() -> AppResult<()> {
     configure_logger();
 
     info!("Starting Heimdall");
     let file = File::create("/tmp/heim.lock")?;
-    if file.try_lock_exclusive().is_err() {
-        bail!("Couldn't aquire lock-file. Aborting..");
-    }
-    info!("Lock file aquired");
+    file.try_lock_exclusive()?;
+    info!("Lock file acquired");
 
     let hotkeys_manager = GlobalHotKeyManager::new()?;
 
