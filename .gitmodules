@@ -1,3 +1,0 @@
-[submodule "crates/global-hotkey"]
-	path = crates/global-hotkey
-	url = https://github.com/tauri-apps/global-hotkey
