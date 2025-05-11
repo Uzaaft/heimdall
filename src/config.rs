@@ -1,6 +1,5 @@
-use core::fmt;
 use std::{
-    fs,
+    fmt,
     path::{Path, PathBuf},
     str::FromStr,
 };
