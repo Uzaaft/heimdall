@@ -1,4 +1,5 @@
 mod error;
+pub mod watcher;
 
 use error::AppResult;
 use std::{process::Command, sync::Once};
