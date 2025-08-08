@@ -7,6 +7,7 @@ homepage = "https://github.com/uzaaft/heimdall"
 documentation = "https://github.com/uzaaft/heimdall"
 repository = "https://github.com/uzaaft/heimdall"
 license = "MIT"
+rust-version = "1.89"
 
 [[bin]]
 name = "heim"
@@ -27,6 +28,4 @@ tracing-subscriber = { version = "0.3", default-features = false, features = [
   "fmt",
   "env-filter",
 ] }
-# File locking
-# TODO: Remove this once https://github.com/rust-lang/rust/issues/130994 is implemented
-fs4 = { version = "0.13", features = ["sync"], default-features = false }
+

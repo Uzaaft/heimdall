@@ -3,7 +3,6 @@ mod error;
 
 use config::Config;
 use error::AppResult;
-use fs4::fs_std::FileExt;
 use heimdall_cli::{configure_logger, spawn_command};
 use std::{collections::HashMap, fs::File};
 use tracing::{info, trace};
@@ -58,7 +57,7 @@ fn main() -> AppResult<()> {
 
     info!("Starting Heimdall");
     let file = File::create("/tmp/heim.lock")?;
-    file.try_lock_exclusive()?;
+    file.lock()?;
     info!("Lock file acquired");
 
     let hotkeys_manager = GlobalHotKeyManager::new()?;
@@ -92,7 +91,7 @@ fn main() -> AppResult<()> {
 
     event_loop.run_app(&mut app).unwrap();
 
-    fs4::fs_std::FileExt::unlock(&file)?;
+    file.unlock()?;
     // Remove file
     Ok(std::fs::remove_file("/tmp/heim.lock")?)
 }
