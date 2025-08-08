@@ -4,7 +4,6 @@ use std::{
     str::FromStr,
 };
 
-use global_hotkey::hotkey::Code;
 use serde::Deserialize;
 
 use crate::error::{AppError, AppResult};
@@ -55,34 +54,48 @@ pub struct Binding {
 }
 
 // To string
+impl Binding {
+    fn format_with_modifiers(&self, key_code: &str) -> String {
+        if self.modifiers.is_empty() {
+            key_code.to_string()
+        } else {
+            format!("{}+{}", self.modifiers.join("+").to_lowercase(), key_code)
+        }
+    }
+
+    fn try_parse_to_code(key: &str) -> Option<String> {
+        // Hotpath: try to parse common keys directly to their Code string representation
+        match key.to_lowercase().as_str() {
+            "enter" => Some("Enter".to_string()),
+            "esc" | "escape" => Some("Escape".to_string()),
+            "space" => Some("Space".to_string()),
+            "=" | "equal" => Some("Equal".to_string()),
+            "tab" => Some("Tab".to_string()),
+            "backspace" => Some("Backspace".to_string()),
+            "delete" => Some("Delete".to_string()),
+            // Add more common keys as needed
+            _ => None,
+        }
+    }
+}
+
 impl fmt::Display for Binding {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        let modifiers = self.modifiers.join("+").to_lowercase();
         match &self.key {
             Some(key) => {
-                if key.parse::<u32>().is_ok() {
-                    write!(f, "Digit{key}")
-                } else if key.as_str() == "Enter" {
-                    write!(f, "{modifiers}+{}", Code::Enter)
-                } else if key.as_str() == "=" {
-                    write!(f, "Equal")
-                } else if key.as_str() == "Esc" || key.as_str() == "Escape" {
-                    write!(f, "Escape")
-                } else if key.as_str() == "Space" {
-                    write!(f, "Space")
-                } else if modifiers.is_empty() {
-                    write!(f, "Key{}", key.to_uppercase())
+                let key_code = if key.parse::<u32>().is_ok() {
+                    format!("Digit{}", key)
+                } else if let Some(parsed_code) = Self::try_parse_to_code(key) {
+                    parsed_code
                 } else {
-                    write!(f, "{modifiers}+Key{}", key.to_uppercase())
-                }
+                    format!("Key{}", key.to_uppercase())
+                };
+                write!(f, "{}", self.format_with_modifiers(&key_code))
             }
             None => match &self.arrow {
                 Some(arrow) => {
-                    if modifiers.is_empty() {
-                        write!(f, "Arrow{}", arrow)
-                    } else {
-                        write!(f, "{}+Arrow{}", modifiers, arrow)
-                    }
+                    let arrow_code = format!("Arrow{}", arrow);
+                    write!(f, "{}", self.format_with_modifiers(&arrow_code))
                 }
                 None => panic!("Invalid binding. Must have either key or arrow"),
             },
