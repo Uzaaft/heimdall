@@ -21,7 +21,7 @@ winit = { version = "0.30", default-features = false }
 global-hotkey = { version = "0.7" }
 serde = { version = "1" }
 # Toml reading
-toml = { version = "0.8", default-features = false, features = ["parse"] }
+toml = { version = "0.9", default-features = false, features = ["parse", "serde"] }
 # Logging
 tracing = { version = "0.1", default-features = false }
 tracing-subscriber = { version = "0.3", default-features = false, features = [
