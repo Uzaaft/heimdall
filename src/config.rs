@@ -66,6 +66,10 @@ impl fmt::Display for Binding {
                     write!(f, "{modifiers}+{}", Code::Enter)
                 } else if key.as_str() == "=" {
                     write!(f, "Equal")
+                } else if key.as_str() == "Esc" || key.as_str() == "Escape" {
+                    write!(f, "Escape")
+                } else if key.as_str() == "Space" {
+                    write!(f, "Space")
                 } else if modifiers.is_empty() {
                     write!(f, "Key{}", key.to_uppercase())
                 } else {
